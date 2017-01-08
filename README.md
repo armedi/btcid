@@ -1,9 +1,6 @@
 # btcid
 Python wrapper for bitcoin.co.id API
 
-Author: medex
-
-
 Gunakan python versi 3
 
 ```sh
