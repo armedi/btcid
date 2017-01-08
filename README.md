@@ -8,13 +8,14 @@ Gunakan python versi 3
 import vipbtc
 ```
 
-Public Info:
+Public API:
 ```sh
 vipbtc.getTicker()
 vipbtc.getDepth()
 vipbtc.getTradeHistory()
 ```
 
+Trade API:
 ```sh
 key = "API key anda"
 secret = "Secret key anda"
@@ -26,5 +27,5 @@ akun.transHistory()
 akun.trade(ttype, amount, price)
 akun.tradeHistory()
 akun.openOrders()
-akun.cancelOrder()
+akun.cancelOrder(ttype, order_id)
 ```
