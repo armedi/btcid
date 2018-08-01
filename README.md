@@ -1,5 +1,5 @@
 # btcid
-Python wrapper for bitcoin.co.id API
+Python wrapper for indodax.com API
 
 Gunakan python versi 3
 
