@@ -18,8 +18,8 @@ class vipAuth(AuthBase):
         return r
 
 def nonce():
-    time.sleep(1)
-    return str(time.time()).split('.')[0]
+    time.sleep(1/1000)
+    return str(int(time.time()*1000))
 
 def signature(secret, params):
     sig = hmac.new(secret.encode(), params.encode(), hashlib.sha512)
@@ -37,13 +37,13 @@ class TradeAPI:
             self.__requests_session = common.Session()
 
     def __post(self, method, params):        
-        url = 'https://vip.bitcoin.co.id/tapi'
+        url = 'https://indodax.com/tapi'
         params['method'] = method
         params['nonce'] = nonce()
         auth = vipAuth(self.__key, signature(self.__secret, urlencode(params))) 
         response = self.__requests_session.api_request(url, params, auth, 'post')
         
-        return response.json()
+        return response['return']
 
     def getInfo(self):
         return self.__post('getInfo', {})
@@ -51,32 +51,51 @@ class TradeAPI:
     def transHistory(self):
         return self.__post('transHistory', {})
 
-    def trade(self, ttype, amount, price):
+    def trade(self, pair, ttype, amount, price):
         params = {
-            "pair" : 'btc_idr',
+            "pair" : pair,
             "type" : ttype,
             "price" : price}
         if ttype == 'buy':
-            params['idr'] = amount
+            params[pair[-3:]] = amount
         elif ttype == 'sell':
-            params['btc'] = amount
+            params[pair[:3]] = amount
         return self.__post('trade', params)
 
-    def tradeHistory(self, **kwargs):
-        '''Arguments : count, from_id, end_id, order, since, end'''
-        params = {"pair" : 'btc_idr'}
+    def tradeHistory(self, pair, **kwargs):
+        '''Keyword arguments : count, from_id, end_id, order, since, end'''
+        params = {
+            "pair" : pair
+        }
         if kwargs:
             for key, value in kwargs.items():
                 params[key] = value
         return self.__post('tradeHistory', params)
 
-    def openOrders(self):
-        params = { "pair" : 'btc_idr' }
+    def openOrders(self, pair):
+        params = { "pair" : pair }
         return self.__post('openOrders', params)
-
-    def cancelOrder(self, ttype, order_id):
+    
+    def orderHistory(self, pair, **kwargs):
+        '''Keyword arguments : count, from'''
         params = {
-            'pair' : 'btc_idr',
+            "pair" : pair
+        }
+        if kwargs:
+            for key, value in kwargs.items():
+                params[key] = value
+        return self.__post('orderHistory', params)
+
+    def getOrder(self, pair, order_id):
+        params = {
+            "pair" : pair,
+            "order_id" : order_id
+        }
+        return self.__post('getOrder', params)
+
+    def cancelOrder(self, pair, ttype, order_id):
+        params = {
+            'pair' : pair,
             "order_id" : order_id,
             'type' : ttype}
         return self.__post('cancelOrder', params)
