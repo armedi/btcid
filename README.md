@@ -23,8 +23,10 @@ akun = vipbtc.TradeAPI(key, secret)
 
 akun.getInfo()
 akun.transHistory()
-akun.trade(ttype, amount, price)
+akun.trade()
 akun.tradeHistory()
 akun.openOrders()
-akun.cancelOrder(ttype, order_id)
+akun.orderHistory()
+akun.getOrder()
+akun.cancelOrder()
 ```
