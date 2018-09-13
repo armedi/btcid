@@ -52,14 +52,16 @@ class TradeAPI:
         return self.__post('transHistory', {})
 
     def trade(self, pair, ttype, amount, price):
+        pair_counter, pair_base = pair.split('_')
+
         params = {
             "pair" : pair,
             "type" : ttype,
             "price" : price}
         if ttype == 'buy':
-            params[pair[-3:]] = amount
+            params[pair_base] = amount
         elif ttype == 'sell':
-            params[pair[:3]] = amount
+            params[pair_counter] = amount
         return self.__post('trade', params)
 
     def tradeHistory(self, pair, **kwargs):
