@@ -22,14 +22,18 @@ def getTicker(pair="btc_idr", session=None):
     pair : trading pair
     session : vipbtc.Session object
     """
+    pair_counter, pair_base = pair.split('_')
 
     response = get_data(pair, 'ticker', requests_session=session)
 
     ticker = {}
-    for s in ('high', 'low', 'vol_idr', 'last', 'buy', 'sell', 'server_time'):
-        ticker[s] = int(response['ticker'].get(s))
-    vol_base = "vol_" + pair[:3]
-    vol_counter = "vol_" + pair[-3:]
+    for s in ('high', 'low', 'last', 'buy', 'sell', 'server_time'):
+        tick = response['ticker'].get(s)
+        ticker[s] = float(tick) if pair_base == 'btc' and s != 'server_time' else int(tick)
+
+    vol_base = "vol_" + pair_base
+    vol_counter = "vol_" + pair_counter
+
     for s in (vol_base, vol_counter):
         ticker[s] = float(response['ticker'].get(s))
 
