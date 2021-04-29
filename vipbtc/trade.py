@@ -59,7 +59,7 @@ class TradeAPI:
         if ttype == 'buy':
             params[pair[-3:]] = amount
         elif ttype == 'sell':
-            params[pair[:3]] = amount
+            params[pair[:4]] = amount
         return self.__post('trade', params)
 
     def tradeHistory(self, pair, **kwargs):
